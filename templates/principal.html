@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/ba52fcc0fa.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/principal.css">
+    <script src="../static/scripts/principal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <title>Principal</title>
+</head>
+<body>
+  <div id="response-alert-container" class="response-alert-container hidden">
+    <span id="alert-msg" class="alert-msg"></span>
+  </div>
+    <div class="model-form-container" id="model-form-container">
+      <!-- CONTENEDOR PARA LA PREVISUALIZACION DEL DATAFRAME LIMPIO -->
+      <div id="data-model-preview" class="data-model-preview">
+        <div id="loading-prev-mtable" class="loading-prev-mtable">
+          <div class="loading-prev-icon"><i class="fa-solid fa-circle-notch" aria-hidden="true"></i></div>
+        </div>
+        <table class="table table-striped" id="prev-tabla"></table>
+      </div>
+      <div class="params-form" id="params-form">
+        <h3 id="algorithm-title">Modelo</h3>
+        <button id="close-form-btn" class="close-form-btn"><i class="fa-regular fa-circle-xmark"></i></button>
+        <input type="text" id="data-model-key" name="data-model-key" value="" hidden>
+        <hr>
+        <div id="body-alg-form" class="body-alg-form">
+        </div>
+        <div id="footer-alg-form" class="footer-alg-form">
+          <div>
+            <button id="form-btn-preview" class="form-btn-preview" disabled>Previsualizar</button>
+            <button id="form-btn-process" class="form-btn-process" disabled>Procesar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="save-form-container" id="save-form-container">
+
+      <div class="save-form-content" id="save-form-content">
+        <button id="close-sform-btn" class="close-sform-btn"><i class="fa-regular fa-circle-xmark"></i></button>
+        <div id="loading-save-form" class="loading-save-form">
+          <div class="loading-prev-icon"><i class="fa-solid fa-circle-notch" aria-hidden="true"></i></div>
+          <div class="loading-prev-text">Guardando...</div>
+        </div>
+
+        <h3>Guardar Modelo <span id="save-alg-type"></span></h3>
+        <hr>
+        <input class="save-name-model" id="save-name-model" type="text" placeholder="Nombre del modelo">
+        <div class="save-data-details" id="save-data-details">
+          <div class="save-model-data-container" id="save-model-data-container">
+            <table class="table table-striped" id="save-model-data">
+
+            </table>
+          </div>
+          <div class="save-model-details-container" id="save-model-details-container">
+            <h4>Detalles</h4>
+            <div class="data-details" id="data-details">
+              
+            </div>
+          </div>
+        </div>
+        <div class="btns-control-save">
+          <button class="btn-confirm-save" id="btn-confirm-save" disabled>Guardar</button>
+        </div>
+      </div>
+    </div>
+    <header>
+        <h1>PROYECTO CONVOCATORIA</h1>
+    </header>
+    <main>
+      <div class="container-preview-result">
+        <article class="data-preview-container">
+            <div class="data-preview-content">
+                <form class="file-selection-form" id="file-selection-form" action="/prueba" method="post" enctype="multipart/form-data">
+                    <span id="filename-text" class="filename-text"></span>
+                    <label id="uploadcsv-btn" for="file-upload">Seleccionar archivo</label>
+                    <input type="file" id="file-upload" name="file-upload" accept=".csv" style="display:none;"/>
+                </form>
+                <div class="table-preview">
+                  <div id="loading-table" class="loading-table">
+                    <div class="loading-prev-icon"><i class="fa-solid fa-circle-notch"></i></div>
+                  </div>
+                  <table class="table table-striped" id="tabla">
+                  </table>
+                </div>
+            </div>
+        </article>
+        <!-- AQUI SE MOSTRARAN LAS GRAFICAS DE LOS RESULTADOS -->
+        <article class="data-result-container">
+            <h4>RESULTADOS</h4>
+            <hr>
+            <div class="data-result-content" id="data-result-content">
+            </div>
+        </article>
+      </div>
+      <aside class="control-btns-container">
+        <button class="btn-ia-model allowed" id="algorithm-btn1" value="knn" disabled>KNN</button>
+        <button class="btn-ia-model allowed" id="algorithm-btn2" value="kmeans" disabled>K-MEANS</button>
+        <button class="btn-ia-model" id="algorithm-btn3" value="tree" disabled>ARBOLES DE DECISION</button>
+        <button class="btn-ia-model" id="algorithm-btn4" value="cluster" disabled>AGRUPAMIENTO</button>
+        <button class="btn-ia-model btn-save" id="save-model-btn" disabled>GUARDAR</button>
+      </aside>
+    </main>
+    
+    <!-- FALTA TRABAJAR EN FOOTER -->
+    <footer></footer>
+</body>
+</html>
