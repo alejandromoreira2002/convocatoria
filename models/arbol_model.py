@@ -15,7 +15,7 @@ class RegTreeModel(MLAlgorithms):
         super().__init__(dataCSV, columnas, colClase)
 
     def previewData(self):
-        colsCompletas = [self.colClase] + self.columnas
+        colsCompletas = self.columnas
         dataCSV = self.dataCSV[colsCompletas]
         return dataCSV
 
@@ -53,14 +53,15 @@ class RegTreeModel(MLAlgorithms):
         print(f"Profundidad del árbol: {modelo.get_depth()}")
         print(f"Número de nodos terminales: {modelo.get_n_leaves()}")
 
-        plt = plot_tree(
-                decision_tree = modelo,
-                feature_names = dataCSV.drop(columns = self.colClase).columns,
-                class_names   = dataCSV[self.colClase],
-                filled        = True,
-                impurity      = False,
-                fontsize      = 10,
-                precision     = 2,
-                ax            = ax
+        plot_tree(
+            decision_tree = modelo,
+            feature_names = dataCSV.drop(columns = self.colClase).columns,
+            class_names   = dataCSV[self.colClase],
+            filled        = True,
+            impurity      = False,
+            fontsize      = 10,
+            precision     = 2,
+            ax            = ax
         )
+        #plt.show()
         return plt

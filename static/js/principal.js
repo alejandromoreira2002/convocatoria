@@ -145,9 +145,12 @@ window.onload = () => {
         }
         
         closeForm();
-        fetch(`/process?metodo=${algType}`, {
+        fetch(`/process?metodo=${algType}&filename=${filename}&colClase=${colClase}&columnas=${vcols}`, {
             method: 'POST',
-            body: formData
+            body: JSON.stringify(data),
+            headers:{
+                'Content-Type': 'application/json',  // Asegúrate de que el servidor reciba JSON
+            }
         })
         .then(response => response.json())
         .then(data => {

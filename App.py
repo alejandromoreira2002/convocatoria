@@ -75,14 +75,29 @@ def prevKNN():
     #return jsonify({"res": "ok"})
 
 @app.post('/process')
-def processKNN():
+def processData():
     metodo = request.args.get('metodo')
-    json_data = request.form.get('data')
+    filename = request.args.get('filename')
+    colClase = request.args.get('colClase')
+    columnas = request.args.get('columnas').split(',')
+
+    json_data = request.get_json()
+    #print(json_data)
     dataCSV = pd.DataFrame(json.loads(json_data))
 
-    filename = request.form['filename']
-    colClase = request.form['colClase']
-    columnas = request.form['columnas'].split(',')
+    print(metodo)
+    print(filename)
+    print(colClase)
+    print(columnas)
+    print(dataCSV.head())
+
+    # metodo = request.args.get('metodo')
+    # json_data = request.form.get('data')
+    # dataCSV = pd.DataFrame(json.loads(json_data))
+
+    # filename = request.form['filename']
+    # colClase = request.form['colClase']
+    # columnas = request.form['columnas'].split(',')
 
     if metodo == "knn":
         k = int(request.form['k'])
@@ -130,9 +145,10 @@ def processKNN():
             "plot": encoded_img
             }) 
     
-    elif metodo == "regressionTree":
+    elif metodo == "tree":
         regTreeModel = RegTreeModel(dataCSV, columnas, colClase)
         cleandata = regTreeModel.previewData()
+        print(cleandata.head())
         fig = regTreeModel.resolve()
 
         img_data = BytesIO()
@@ -143,12 +159,13 @@ def processKNN():
         encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
         
         return jsonify({
-            "algType": "regressionTree",
+            "algType": "tree",
             "filename": filename,
-            "cleandata": cleandata.to_json(orient='records'),
+            "cleandata": cleandata.to_json(),
             #"details": json.dumps({"n": n}),
             "plot": encoded_img
         }) 
+    
 @app.post('/file/upload')
 def uploadFile():
     df = pd.read_csv(request.files['dataFile'])
