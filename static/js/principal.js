@@ -85,14 +85,17 @@ window.onload = () => {
         loadingTable.classList.add('lt-open');
 
         const formData = new FormData();
-        formData.append('data', data);
-        formData.append('filename', filename);
-        formData.append('colClase', colClase);
-        formData.append('columnas', vcols);
+        formData.append('data', JSON.stringify(data));
+        // formData.append('filename', filename);
+        // formData.append('colClase', colClase);
+        // formData.append('columnas', vcols);
 
-        fetch(`/${algType}/preview`, {
+        fetch(`/preview?metodo=${algType}&filename=${filename}&colClase=${colClase}&columnas=${vcols}`, {
             method: 'POST',
-            body: formData
+            body: JSON.stringify(data),
+            headers:{
+                'Content-Type': 'application/json',  // Asegúrate de que el servidor reciba JSON
+            },
         })
         .then(response => response.json())
         .then(data => {
@@ -334,15 +337,23 @@ const showForm = (elem) => {
     
     html += `</select></div>`;
     document.querySelector('#body-alg-form').innerHTML = html;
-
+    
     switch(algKey){
         case 'knn': {
+            document.querySelector('#body-alg-form').setAttribute('modo', 'single');
             renderKNNForm();
             break;
         }
         
         case 'kmeans': {
+            document.querySelector('#body-alg-form').setAttribute('modo', 'single');
             renderKMeansForm();
+            break;
+        }
+        
+        case 'tree': {
+            document.querySelector('#body-alg-form').setAttribute('modo', 'multi');
+            renderRegtreeForm();
             break;
         }
 
@@ -371,16 +382,18 @@ const showForm = (elem) => {
         checkbox.addEventListener('change', ()=>{
             const checkboxesMarcados = document.querySelectorAll('.data-cols:checked:enabled');
             const checkboxesDesmarcados = document.querySelectorAll('.data-cols:not(:checked)');
-
-            if (checkboxesMarcados.length >= 2){
-                for(let cbox of checkboxesDesmarcados){
-                    cbox.disabled = true;
-                    cbox.parentElement.style.color = 'rgb(170,170,170)';
-                }
-            }else{
-                for(let cbox of checkboxesDesmarcados){
-                    cbox.disabled = false;
-                    cbox.parentElement.style.color = 'initial';
+            
+            if(document.querySelector('#body-alg-form').getAttribute('modo') == 'single'){
+                if (checkboxesMarcados.length >= 2){
+                    for(let cbox of checkboxesDesmarcados){
+                        cbox.disabled = true;
+                        cbox.parentElement.style.color = 'rgb(170,170,170)';
+                    }
+                }else{
+                    for(let cbox of checkboxesDesmarcados){
+                        cbox.disabled = false;
+                        cbox.parentElement.style.color = 'initial';
+                    }
                 }
             }
         });
@@ -403,6 +416,12 @@ const renderKMeansForm = () => {
     document.querySelector('#body-alg-form').innerHTML += `<div class="alg-form-section">
     <label for="k-clusters-input">Numero de clusters: </label>
     <input type="number" id="k-clusters-input" name="k-clusters-input" value="1" min="1" style="width: 75px; padding: 0 5px">
+  </div>`;
+}
+
+const renderRegtreeForm = () => {
+    document.querySelector('#body-alg-form').innerHTML += `<div class="alg-form-section">
+    
   </div>`;
 }
 

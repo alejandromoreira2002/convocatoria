@@ -6,6 +6,7 @@ import json
 import base64
 from models.kmeans_model import KMeansModel
 from models.knn_model import KNNModel
+from models.arbol_model import RegTreeModel
 #import json
 #import os
 #from dotenv import load_dotenv
@@ -45,12 +46,18 @@ def prueba():
 @app.post('/preview')
 def prevKNN():
     metodo = request.args.get('metodo')
-    json_data = request.form.get('data')
+    filename = request.args.get('filename')
+    colClase = request.args.get('colClase')
+    columnas = request.args.get('columnas').split(',')
+
+    #json_data = request.form.get('data')
+    json_data = request.get_json()
+    #print(json_data)
     dataCSV = pd.DataFrame(json.loads(json_data))
 
-    filename = request.form['filename']
-    colClase = request.form['colClase']
-    columnas = request.form['columnas'].split(',')
+    # filename = request.form['filename']
+    # colClase = request.form['colClase']
+    # columnas = request.form['columnas'].split(',')
     
     dfmodel = None
     if metodo == "knn":
@@ -59,8 +66,13 @@ def prevKNN():
     elif metodo == "kmeans":
         kmeansmodel = KMeansModel(dataCSV, columnas, colClase)
         dfmodel = kmeansmodel.previewData()
+    elif metodo == "tree":
+        rTree = KMeansModel(dataCSV, columnas, colClase)
+        dfmodel = rTree.previewData()
+        #print(dfmodel.head())
 
     return dfmodel.to_json(orient='records') 
+    #return jsonify({"res": "ok"})
 
 @app.post('/process')
 def processKNN():
@@ -117,6 +129,26 @@ def processKNN():
             "details": json.dumps({"n": n}),
             "plot": encoded_img
             }) 
+    
+    elif metodo == "regressionTree":
+        regTreeModel = RegTreeModel(dataCSV, columnas, colClase)
+        cleandata = regTreeModel.previewData()
+        fig = regTreeModel.resolve()
+
+        img_data = BytesIO()
+        fig.savefig(img_data, format='png')
+        img_data.seek(0)
+        fig.close()
+
+        encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
+        
+        return jsonify({
+            "algType": "regressionTree",
+            "filename": filename,
+            "cleandata": cleandata.to_json(orient='records'),
+            #"details": json.dumps({"n": n}),
+            "plot": encoded_img
+        }) 
 @app.post('/file/upload')
 def uploadFile():
     df = pd.read_csv(request.files['dataFile'])
