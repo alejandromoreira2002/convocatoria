@@ -360,6 +360,12 @@ const showForm = (elem) => {
             break;
         }
 
+        case 'regression': {
+            document.querySelector('#body-alg-form').setAttribute('modo', 'multi');
+            renderRegtreeForm();
+            break;
+        }
+
         default: {
             console.log("Accion no encontrada")
         }
