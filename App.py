@@ -100,8 +100,8 @@ def processData():
     # columnas = request.form['columnas'].split(',')
 
     if metodo == "knn":
-        k = int(request.form['k'])
-        centro = tuple([int(x) for x in request.form['centro'].split(',')])
+        k = int(request.args.get('k'))
+        centro = tuple([int(x) for x in request.args.get('centro').split(',')])
         
         knnmodel = KNNModel(dataCSV, columnas, colClase)
         cleandata = knnmodel.previewData()
@@ -124,7 +124,7 @@ def processData():
             "plot": encoded_img
         })
     elif metodo == "kmeans":
-        n = int(request.form['n'])
+        n = int(request.args.get('n'))
     
         kmeansmodel = KMeansModel(dataCSV, columnas, colClase)
         cleandata = kmeansmodel.previewData()
