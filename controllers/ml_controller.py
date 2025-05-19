@@ -9,6 +9,20 @@ class MLController:
     def __init__(self, metodo):
         self.metodo = metodo
 
+    def previsualizar(self, dataCSV, columnas, colClase):
+        dfmodel = None
+        if self.metodo == "knn":
+            knnmodel = KNNModel(dataCSV, columnas, colClase)
+            dfmodel = knnmodel.previewData()
+        elif self.metodo == "kmeans":
+            kmeansmodel = KMeansModel(dataCSV, columnas, colClase)
+            dfmodel = kmeansmodel.previewData()
+        elif self.metodo == "tree":
+            rTree = RegTreeModel(dataCSV, columnas, colClase)
+            dfmodel = rTree.previewData()
+        
+        return dfmodel
+
     def procesar(self, dataCSV, columnas, colClase, peticion):
         if self.metodo == "knn":
             k = int(peticion.get('k'))

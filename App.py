@@ -57,17 +57,8 @@ def prevKNN():
     # colClase = request.form['colClase']
     # columnas = request.form['columnas'].split(',')
     
-    dfmodel = None
-    if metodo == "knn":
-        knnmodel = KNNModel(dataCSV, columnas, colClase)
-        dfmodel = knnmodel.previewData()
-    elif metodo == "kmeans":
-        kmeansmodel = KMeansModel(dataCSV, columnas, colClase)
-        dfmodel = kmeansmodel.previewData()
-    elif metodo == "tree":
-        rTree = RegTreeModel(dataCSV, columnas, colClase)
-        dfmodel = rTree.previewData()
-        #print(dfmodel.head())
+    controladorML = MLController(metodo)
+    dfmodel = controladorML.previsualizar(dataCSV, columnas, colClase)
 
     return dfmodel.to_json(orient='records') 
     #return jsonify({"res": "ok"})
@@ -101,55 +92,6 @@ def processData():
     resultado = controladorML.procesar(dataCSV, columnas, colClase, request.args)
     resultado['filename'] = filename
     return jsonify(resultado)
-
-    """
-    if metodo == "knn":
-        k = int(request.args.get('k'))
-        centro = tuple([int(x) for x in request.args.get('centro').split(',')])
-        
-        knnmodel = KNNModel(dataCSV, columnas, colClase)
-        cleandata = knnmodel.previewData()
-        encoded_img = knnmodel.resolve(k, centro)
-
-        prediction = knnmodel.prediction
-
-        return jsonify({
-            "algType": "knn",
-            "filename": filename,
-            "cleandata": cleandata.to_json(orient='records'),
-            "details": json.dumps({"k": k, "centro": request.args.get('centro')}),
-            "prediction": prediction,
-            "plot": encoded_img
-        })
-    elif metodo == "kmeans":
-        n = int(request.args.get('n'))
-    
-        kmeansmodel = KMeansModel(dataCSV, columnas, colClase)
-        cleandata = kmeansmodel.previewData()
-        encoded_img = kmeansmodel.resolve(n)
-        
-        return jsonify({
-            "algType": "kmeans",
-            "filename": filename,
-            "cleandata": cleandata.to_json(orient='records'),
-            "details": json.dumps({"n": n}),
-            "plot": encoded_img
-        }) 
-    
-    elif metodo == "tree":
-        regTreeModel = RegTreeModel(dataCSV, columnas, colClase)
-        cleandata = regTreeModel.previewData()
-        print(cleandata.head())
-        encoded_img = regTreeModel.resolve()
-        
-        return jsonify({
-            "algType": "tree",
-            "filename": filename,
-            "cleandata": cleandata.to_json(),
-            #"details": json.dumps({"n": n}),
-            "plot": encoded_img
-        })
-    """
     
 @app.post('/file/upload')
 def uploadFile():
