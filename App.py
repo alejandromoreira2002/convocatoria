@@ -105,14 +105,8 @@ def processData():
         
         knnmodel = KNNModel(dataCSV, columnas, colClase)
         cleandata = knnmodel.previewData()
-        fig = knnmodel.resolve(k, centro)
+        encoded_img = knnmodel.resolve(k, centro)
 
-        img_data = BytesIO()
-        fig.savefig(img_data, format='png')
-        img_data.seek(0)
-        fig.close()
-
-        encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
         prediction = knnmodel.prediction
 
         return jsonify({
@@ -128,14 +122,7 @@ def processData():
     
         kmeansmodel = KMeansModel(dataCSV, columnas, colClase)
         cleandata = kmeansmodel.previewData()
-        fig = kmeansmodel.resolve(n)
-
-        img_data = BytesIO()
-        fig.savefig(img_data, format='png')
-        img_data.seek(0)
-        fig.close()
-
-        encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
+        encoded_img = kmeansmodel.resolve(n)
         
         return jsonify({
             "algType": "kmeans",
@@ -143,7 +130,7 @@ def processData():
             "cleandata": cleandata.to_json(orient='records'),
             "details": json.dumps({"n": n}),
             "plot": encoded_img
-            }) 
+        }) 
     
     elif metodo == "tree":
         regTreeModel = RegTreeModel(dataCSV, columnas, colClase)
