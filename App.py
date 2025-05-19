@@ -4,9 +4,7 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 import json
 import base64
-from models.kmeans_model import KMeansModel
-from models.knn_model import KNNModel
-from models.arbol_model import RegTreeModel
+from controllers.ml_controller import MLController
 #import json
 #import os
 #from dotenv import load_dotenv
@@ -99,6 +97,12 @@ def processData():
     # colClase = request.form['colClase']
     # columnas = request.form['columnas'].split(',')
 
+    controladorML = MLController(metodo)
+    resultado = controladorML.procesar(dataCSV, columnas, colClase, request.args)
+    resultado['filename'] = filename
+    return jsonify(resultado)
+
+    """
     if metodo == "knn":
         k = int(request.args.get('k'))
         centro = tuple([int(x) for x in request.args.get('centro').split(',')])
@@ -145,6 +149,7 @@ def processData():
             #"details": json.dumps({"n": n}),
             "plot": encoded_img
         })
+    """
     
 @app.post('/file/upload')
 def uploadFile():

@@ -160,19 +160,28 @@ window.onload = () => {
         .then(data => {
             let resHTML = `
                 <div class="model-graph">
-                <img src="data:image/png;base64,${data['plot']}" id="model-result-graph" name="modelplot_${data['algType']+'_'+Date.now()}" width="100%" alt="Plot">
+                    <img src="data:image/png;base64,${data['plot']}" id="model-result-graph" name="modelplot_${data['algType']+'_'+Date.now()}" width="100%" alt="Plot">
                 </div>
             `;
             if(data['algType'] == "knn"){
                 resHTML += `
                     <div class="model-result">
                         <p><b>Predicción:</b> ${data['prediction']}</p>
+                        ${data['res_details']}
                     </div>
                 `;
             }else if(data['algType'] == "kmeans"){
                 resHTML += `
                     <div class="model-result">
-                        <p><b>Resultado:</b> Algoritmo Kmeans</p>
+                        <p><b>Resultado:</b> Algoritmo Kmeans</p><br>
+                        ${data['res_details']}
+                    </div>
+                `;
+            }else if(data['algType'] == "tree"){
+                resHTML += `
+                    <div class="model-result">
+                        <p><b>Resultado:</b> Algoritmo Arbol de Decision</p><br>
+                        ${data['res_details']}
                     </div>
                 `;
             }
