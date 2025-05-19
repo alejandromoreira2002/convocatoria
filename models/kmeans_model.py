@@ -1,10 +1,9 @@
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import base64
-from io import BytesIO
-import pandas as pd
+import time
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 from .MLAlgorithms import MLAlgorithms
 
 class KMeansModel(MLAlgorithms):
@@ -22,10 +21,16 @@ class KMeansModel(MLAlgorithms):
         
         X = list(zip(x, y))
 
+        start_time = time.time()
         k_means = KMeans(n_clusters=self.n)
         k_means.fit(X)
+        end_time = time.time()
+        processing_time = end_time - start_time
         centroides = k_means.cluster_centers_
         etiquetas = k_means.labels_
+        
+        inertia = k_means.inertia_
+        silhouette = silhouette_score(X, etiquetas)
 
         plt.cla()
         plt.clf()
@@ -35,10 +40,8 @@ class KMeansModel(MLAlgorithms):
 
         plt.legend(loc='best')
         #plt.show()
-        img_data = BytesIO()
-        plt.savefig(img_data, format='png')
-        img_data.seek(0)
-        plt.close()
 
-        encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
-        return encoded_img
+        return {
+            "graph": plt, 
+            "details": f"<p><b>Tiempo de procesamiento:</b></p><p>~{processing_time:.4f} segundos</p><p><b>Eficiencia:</b></p><ul><li>Inercia: ~{inertia:.2f}</li><li>Puntaje de Silhouette: ~{silhouette:.4f}</li></ul>"
+        }
