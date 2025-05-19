@@ -119,6 +119,7 @@ window.onload = () => {
         formData.append('colClase', colClase);
         formData.append('columnas', vcols);
 
+        parametros = ""
         switch(algType){
             case 'knn': {
                 let k = parseInt(document.querySelector('#k-neighbors-input').value);
@@ -127,15 +128,18 @@ window.onload = () => {
                     parseInt(document.querySelector('#k-centery-input').value)
                 ];
 
-                formData.append('k', k);
-                formData.append('centro', centro);
+                parametros += "&k="+k+"&centro="+centro.join(',')
+
+                //formData.append('k', k);
+                //formData.append('centro', centro);
                 break;
             }
 
             case 'kmeans': {
                 let n = parseInt(document.querySelector('#k-clusters-input').value);
 
-                formData.append('n', n);
+                parametros += "&n="+n
+                //formData.append('n', n);
                 break;
             }
             
@@ -145,7 +149,7 @@ window.onload = () => {
         }
         
         closeForm();
-        fetch(`/process?metodo=${algType}&filename=${filename}&colClase=${colClase}&columnas=${vcols}`, {
+        fetch(`/process?metodo=${algType}&filename=${filename}&colClase=${colClase}&columnas=${vcols}${parametros}`, {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{
