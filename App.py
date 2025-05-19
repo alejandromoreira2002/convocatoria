@@ -113,7 +113,7 @@ def processData():
             "algType": "knn",
             "filename": filename,
             "cleandata": cleandata.to_json(orient='records'),
-            "details": json.dumps({"k": k, "centro": request.form['centro']}),
+            "details": json.dumps({"k": k, "centro": request.args.get('centro')}),
             "prediction": prediction,
             "plot": encoded_img
         })
