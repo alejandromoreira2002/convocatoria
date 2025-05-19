@@ -1,4 +1,8 @@
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 import pandas as pd
 from sklearn.cluster import KMeans
 from .MLAlgorithms import MLAlgorithms
@@ -31,4 +35,10 @@ class KMeansModel(MLAlgorithms):
 
         plt.legend(loc='best')
         #plt.show()
-        return plt
+        img_data = BytesIO()
+        plt.savefig(img_data, format='png')
+        img_data.seek(0)
+        plt.close()
+
+        encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
+        return encoded_img
