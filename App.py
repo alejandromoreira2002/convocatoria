@@ -67,7 +67,7 @@ def prevKNN():
         kmeansmodel = KMeansModel(dataCSV, columnas, colClase)
         dfmodel = kmeansmodel.previewData()
     elif metodo == "tree":
-        rTree = KMeansModel(dataCSV, columnas, colClase)
+        rTree = RegTreeModel(dataCSV, columnas, colClase)
         dfmodel = rTree.previewData()
         #print(dfmodel.head())
 
@@ -149,14 +149,7 @@ def processData():
         regTreeModel = RegTreeModel(dataCSV, columnas, colClase)
         cleandata = regTreeModel.previewData()
         print(cleandata.head())
-        fig = regTreeModel.resolve()
-
-        img_data = BytesIO()
-        fig.savefig(img_data, format='png')
-        img_data.seek(0)
-        fig.close()
-
-        encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
+        encoded_img = regTreeModel.resolve()
         
         return jsonify({
             "algType": "tree",
@@ -164,7 +157,7 @@ def processData():
             "cleandata": cleandata.to_json(),
             #"details": json.dumps({"n": n}),
             "plot": encoded_img
-        }) 
+        })
     
 @app.post('/file/upload')
 def uploadFile():
@@ -173,4 +166,4 @@ def uploadFile():
     return df.to_json(orient='records')
 
 if __name__ == '__main__':
-    app.run(port=3000, debug=True)
+    app.run(port=3000, debug=True, threaded=True, host="0.0.0.0")
