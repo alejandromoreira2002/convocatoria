@@ -1,2 +1,4 @@
 /models/__pycache__
 /notebooks/
+.DS_Store
+test/.ipynb_checkpoints/
