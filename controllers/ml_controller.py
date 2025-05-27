@@ -1,6 +1,7 @@
 from models.kmeans_model import KMeansModel
 from models.knn_model import KNNModel
 from models.arbol_model import RegTreeModel
+from models.regression_model import RegresionModel
 import base64
 from io import BytesIO
 import json
@@ -20,6 +21,9 @@ class MLController:
         elif self.metodo == "tree":
             rTree = RegTreeModel(dataCSV, columnas, colClase)
             dfmodel = rTree.previewData()
+        elif self.metodo == "regression":
+            regression = RegresionModel(dataCSV, columnas, colClase)
+            dfmodel = regression.previewData()
         
         return dfmodel
 
@@ -88,6 +92,26 @@ class MLController:
             encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
             return {
                 "algType": "tree",
+                "cleandata": cleandata.to_json(),
+                #"details": json.dumps({"n": n}),
+                "res_details": resultado['details'],
+                "plot": encoded_img
+            }
+        elif self.metodo == "regression":
+            regresionModel = RegresionModel(dataCSV, columnas, colClase)
+            cleandata = regresionModel.previewData()
+            print(cleandata.head())
+            resultado = regresionModel.resolve()
+            graph = resultado['graph']
+            
+            img_data = BytesIO()
+            graph.savefig(img_data, format='png')
+            img_data.seek(0)
+            graph.close()
+
+            encoded_img = base64.b64encode(img_data.read()).decode('utf-8')
+            return {
+                "algType": "regression",
                 "cleandata": cleandata.to_json(),
                 #"details": json.dumps({"n": n}),
                 "res_details": resultado['details'],

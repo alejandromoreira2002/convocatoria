@@ -184,6 +184,13 @@ window.onload = () => {
                         ${data['res_details']}
                     </div>
                 `;
+            }else if(data['algType'] == "regression"){
+                resHTML += `
+                    <div class="model-result">
+                        <p><b>Resultado:</b> Algoritmo Regresion</p><br>
+                        ${data['res_details']}
+                    </div>
+                `;
             }
             const dataResult = document.querySelector('#data-result-content');
             dataResult.innerHTML = resHTML;
@@ -374,8 +381,8 @@ const showForm = (elem) => {
         }
 
         case 'regression': {
-            document.querySelector('#body-alg-form').setAttribute('modo', 'multi');
-            renderRegtreeForm();
+            document.querySelector('#body-alg-form').setAttribute('modo', 'single');
+            renderRegressionForm();
             break;
         }
 
@@ -442,6 +449,12 @@ const renderKMeansForm = () => {
 }
 
 const renderRegtreeForm = () => {
+    document.querySelector('#body-alg-form').innerHTML += `<div class="alg-form-section">
+    
+  </div>`;
+}
+
+const renderRegressionForm = () => {
     document.querySelector('#body-alg-form').innerHTML += `<div class="alg-form-section">
     
   </div>`;
