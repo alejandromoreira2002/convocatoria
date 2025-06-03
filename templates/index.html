@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../static/css/principal.css">
     <script src="../static/js/principal.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <title>Principal</title>
 </head>
 <body>
@@ -86,6 +87,25 @@
                   </div>
                   <table class="table table-striped" id="tabla">
                   </table>
+                </div>
+                <div style="background-color: #DFDFDF; padding-bottom: 0;">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination pagination-sm" id="data-pages" style="padding-bottom: 0;">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link paginado-data" pagina="1" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link paginado-data" pagina="2" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link paginado-data" pagina="3" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
                 </div>
             </div>
         </article>

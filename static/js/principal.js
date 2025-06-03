@@ -1,10 +1,4 @@
 window.onload = () => {
-    if(sessionStorage.getItem('data')){
-        let data = JSON.parse(sessionStorage.getItem('data'));
-        let filename = sessionStorage.getItem('filename');
-        previewData(filename, data, '#tabla');
-    }
-
     const fileElement = document.querySelector('#file-upload');
     const algBtn1 = document.querySelector('#algorithm-btn1');
     const algBtn2 = document.querySelector('#algorithm-btn2');
@@ -18,13 +12,13 @@ window.onload = () => {
     var gparams = null;
 
     // Presenta el nombre del archivo al lado y muestra tabla
-    const readFile = () => {
+    const uploadFile = () => {
         const csvFile = fileElement.files[0];
         const filename = csvFile.name;
         
         const loadingTable = document.querySelector('#loading-table');
         
-        document.querySelector('#tabla').innerHTML = "";
+        //document.querySelector('#tabla').innerHTML = "";
         loadingTable.classList.add('lt-open');
         
         const formData = new FormData();
@@ -36,13 +30,90 @@ window.onload = () => {
         })
         .then(response => response.json())
         .then(data => {
-            loadingTable.classList.remove('lt-open');
-            previewData(filename, data, "#tabla");
 
-            sessionStorage.setItem('data', JSON.stringify(data));
-            sessionStorage.setItem('filename', filename);
+            if(data.ok){
+                let datos = data.datos;
+                loadingTable.classList.remove('lt-open');
+                sessionStorage.setItem('filename', datos.nombre_archivo);
+                sessionStorage.setItem('datapages', datos.paginas);
+                
+                readFile(datos.nombre_archivo);
+                //POR REVISAR
+                //previewData(filename, data, "#tabla");
+    
+                //sessionStorage.setItem('data', JSON.stringify(data));
+            }
         });
         
+    }
+
+    // Presenta el nombre del archivo al lado y muestra tabla
+    const readFile = (archivo, pagina=1) => {
+        construirNav(pagina);
+        const loadingTable = document.querySelector('#loading-table');
+        
+        document.querySelector('#tabla').innerHTML = "";
+        loadingTable.classList.add('lt-open');
+
+        let queries = "?pagina="+pagina
+        
+        const formData = new FormData();
+        formData.append('filename', archivo);
+        fetch('/file/read'+queries, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadingTable.classList.remove('lt-open');
+            previewData(archivo, data, "#tabla");
+        });
+        
+    }
+
+    const construirNav = (actual=1) => {
+        let paginas = parseInt(sessionStorage.getItem('datapages'));
+        let maxnavs = 10
+        let pagesAnt = 8
+
+        let inicio = 1;
+        //let fin = inicio + maxnavs;
+        let fin = paginas+1;
+
+        if((actual-pagesAnt) > 0){
+            inicio = actual - pagesAnt;
+        }
+
+        if((inicio + maxnavs) <= paginas+1){
+            fin = inicio + maxnavs;
+        }
+
+        console.log(inicio, ' => ', fin)
+
+        //let htmlnav = ""
+        $('#data-pages').empty();
+        for(let i=inicio; i<fin; i++){
+            //htmlnav += `<li class="page-item"><a class="page-link paginado-data" id="navpage-${i}" pagina="${i}" href="#" onclick="clickPagina(this)">${i}</a></li>`;
+            let $lista = $('<li>')
+                .addClass('page-item');
+
+            var $link = $('<a>')
+                .addClass('page-link paginado-data')
+                .attr('id', `navpage-${i}`)
+                .attr('pagina', i)
+                .attr('href', '#')
+                .text(i);
+
+            $link.on('click', function() {
+                clickPagina(this);
+            });
+            //let link = $(`<a class="page-link paginado-data" id="navpage-${i}" pagina="${i}" href="#" onclick="clickPagina(this)">`).text(i);
+            $lista.append($link)
+            $('#data-pages').append($lista);
+        }
+        //$('#data-pages').html(htmlnav);
+        //$('.page-item').removeClass('active')
+        $(`#navpage-${actual}`).parent().addClass('active');
     }
 
     const openForm = (event) => {
@@ -60,18 +131,46 @@ window.onload = () => {
         document.querySelector('#body-alg-form').innerHTML = "";
     }
     
-    fileElement.addEventListener('change', readFile);
+    fileElement.addEventListener('change', uploadFile);
     algBtn1.addEventListener('click', openForm);
     algBtn2.addEventListener('click', openForm);
     algBtn3.addEventListener('click', openForm);
     algBtn4.addEventListener('click', openForm);
     btnCloseForm.addEventListener('click', closeForm);
 
+    /*$('.paginado-data').on('click', function() {
+        //$('.page-item').removeClass('active')
+        //$(this).parent().addClass('active');
+
+        let datoscsv = sessionStorage.getItem('filename');
+
+        if(datoscsv){
+            var valor = $(this).attr('pagina');
+            readFile(datoscsv, valor);
+        }
+    });*/
+
+    const clickPagina = (elemento) => {
+        console.log(elemento);
+        let datoscsv = sessionStorage.getItem('filename');
+
+        if(datoscsv){
+            var valor = $(elemento).attr('pagina');
+            readFile(datoscsv, valor);
+        }
+    }
+
+    if(sessionStorage.getItem('filename')){
+        //let data = JSON.parse(sessionStorage.getItem('data'));
+        let filename = sessionStorage.getItem('filename');
+        readFile(filename);
+    }
+
     document.querySelector('#form-btn-preview').addEventListener('click', (e) => {
         document.querySelector('#data-model-preview').style.display = "block";
         document.querySelector('#data-model-preview').style.height = `${document.querySelector('#params-form').clientHeight}px`;
 
-        let data = sessionStorage.getItem('data');
+        //let data = sessionStorage.getItem('data');
         let filename = sessionStorage.getItem('filename');
         let algType = document.querySelector('#data-model-key').value;
         let colClase = document.querySelector('#clase-cols-select').value;
@@ -85,14 +184,14 @@ window.onload = () => {
         loadingTable.classList.add('lt-open');
 
         const formData = new FormData();
-        formData.append('data', JSON.stringify(data));
-        // formData.append('filename', filename);
+        //formData.append('data', JSON.stringify(data));
+        formData.append('filename', filename);
         // formData.append('colClase', colClase);
         // formData.append('columnas', vcols);
 
         fetch(`/preview?metodo=${algType}&filename=${filename}&colClase=${colClase}&columnas=${vcols}`, {
-            method: 'POST',
-            body: JSON.stringify(data),
+            method: 'GET',
+            //body: formData,
             headers:{
                 'Content-Type': 'application/json',  // Asegúrate de que el servidor reciba JSON
             },
@@ -105,7 +204,7 @@ window.onload = () => {
     });
     
     document.querySelector('#form-btn-process').addEventListener('click', (e) => {
-        let data = sessionStorage.getItem('data');
+        //let data = sessionStorage.getItem('data');
         let filename = sessionStorage.getItem('filename');
         let algType = document.querySelector('#data-model-key').value;
         let colClase = document.querySelector('#clase-cols-select').value;
@@ -114,7 +213,7 @@ window.onload = () => {
         document.querySelectorAll('.data-cols:checked').forEach((elem) => vcols.push(elem.value));
 
         const formData = new FormData();
-        formData.append('data', data);
+        //formData.append('data', data);
         formData.append('filename', filename);
         formData.append('colClase', colClase);
         formData.append('columnas', vcols);
@@ -150,8 +249,8 @@ window.onload = () => {
         
         closeForm();
         fetch(`/process?metodo=${algType}&filename=${filename}&colClase=${colClase}&columnas=${vcols}${parametros}`, {
-            method: 'POST',
-            body: JSON.stringify(data),
+            method: 'GET',
+            //body: JSON.stringify(data),
             headers:{
                 'Content-Type': 'application/json',  // Asegúrate de que el servidor reciba JSON
             }
