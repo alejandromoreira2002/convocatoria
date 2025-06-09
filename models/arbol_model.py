@@ -19,7 +19,7 @@ class RegTreeModel(MLAlgorithms):
         super().__init__(dataCSV, columnas, colClase)
 
     def previewData(self):
-        colsCompletas = self.columnas
+        colsCompletas = self.columnas + [self.colClase]
         dataCSV = self.dataCSV[colsCompletas]
         return dataCSV
 
@@ -37,7 +37,7 @@ class RegTreeModel(MLAlgorithms):
         start_fit = time.time()
         # Creación del modelo
         modelo = DecisionTreeRegressor(
-            max_depth         = 3,
+            max_depth         = 50,
             random_state      = 123
         )
 

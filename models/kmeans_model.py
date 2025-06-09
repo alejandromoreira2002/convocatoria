@@ -14,7 +14,7 @@ class KMeansModel(MLAlgorithms):
         self.n = n
 
         dataCSV = self.previewData()
-        self.columnas.remove(self.colClase)
+        #self.columnas.remove(self.colClase)
         x = dataCSV[self.columnas[0]]
         y = dataCSV[self.columnas[1]]
         classes = dataCSV[self.colClase]

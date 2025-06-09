@@ -12,7 +12,7 @@ class RegresionModel(MLAlgorithms):
         super().__init__(dataCSV, columnas, colClase)
 
     def previewData(self):
-        colsCompletas = self.columnas
+        colsCompletas = self.columnas + [self.colClase]
         dataCSV = self.dataCSV[colsCompletas]
         return dataCSV
 
@@ -20,7 +20,7 @@ class RegresionModel(MLAlgorithms):
         html = "<p><b>Tiempo de procesamiento:</b></p><ul>"
 
         dataCSV = self.previewData()
-        self.columnas.remove(self.colClase)
+        #self.columnas.remove(self.colClase)
 
         # Selección de características y variable objetivo
         # Usamos item_price y quantity para predecir transaction_amount

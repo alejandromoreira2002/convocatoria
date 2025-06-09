@@ -293,13 +293,13 @@ window.onload = () => {
             }
             const dataResult = document.querySelector('#data-result-content');
             dataResult.innerHTML = resHTML;
-            document.querySelector("#save-model-btn").removeAttribute('disabled');
+            //document.querySelector("#save-model-btn").removeAttribute('disabled');
 
             document.querySelector('#save-alg-type').innerText = data['algType'];
 
-            gcleandata = data['cleandata'];
+            //gcleandata = data['cleandata'];
             gparams = data['details'];
-            previewData(null, JSON.parse(data['cleandata']), "#save-model-data");
+            //previewData(null, JSON.parse(data['cleandata']), "#save-model-data");
             dataDetails = document.querySelector('#data-details');
             dataDetails.innerHTML = `
                 <p><b>Tipo de Algoritmo:</b> <span id="d-algType">${data['algType']}</span></p>

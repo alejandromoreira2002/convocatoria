@@ -84,7 +84,7 @@ class KNNModel(MLAlgorithms):
         self.centro = centro
 
         dataCSV = self.previewData()
-        self.columnas.remove(self.colClase)
+        #self.columnas.remove(self.colClase)
         x = dataCSV[self.columnas[0]]
         y = dataCSV[self.columnas[1]]
 

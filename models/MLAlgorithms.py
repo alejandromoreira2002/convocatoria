@@ -20,7 +20,7 @@ class MLAlgorithms:
         fillnavals = {}
         for col in self.dataCSV:
             column = self.dataCSV[col]
-            if column.dtype =='int64':
+            if column.dtype =='int64' or column.dtype =='float64':
                 media = column.mean()
                 fillnavals[col] = media
             elif column.dtype =='O':
