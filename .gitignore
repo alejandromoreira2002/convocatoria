@@ -4,3 +4,5 @@
 test/.ipynb_checkpoints/
 /controllers/__pycache__/
 /temp/
+/controllers/
+/test/
