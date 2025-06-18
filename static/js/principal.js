@@ -173,7 +173,7 @@ window.onload = () => {
         //let data = sessionStorage.getItem('data');
         let filename = sessionStorage.getItem('filename');
         let algType = document.querySelector('#data-model-key').value;
-        let colClase = document.querySelector('#clase-cols-select').value;
+        let colClase = algType == 'kmeans' ? "" : document.querySelector('#clase-cols-select').value;
         let vcols = [];
         
         document.querySelectorAll('.data-cols:checked').forEach((elem) => vcols.push(elem.value));
@@ -207,7 +207,7 @@ window.onload = () => {
         //let data = sessionStorage.getItem('data');
         let filename = sessionStorage.getItem('filename');
         let algType = document.querySelector('#data-model-key').value;
-        let colClase = document.querySelector('#clase-cols-select').value;
+        let colClase = algType == 'kmeans' ? "" : document.querySelector('#clase-cols-select').value;;
         let vcols = [];
         
         document.querySelectorAll('.data-cols:checked').forEach((elem) => vcols.push(elem.value));
@@ -448,7 +448,7 @@ const showForm = (elem) => {
     }
 
     html += `</div></div>
-            <div class="alg-form-section">
+            <div class="alg-form-section" ${algKey == 'kmeans' ? 'style="display:none;"' : ''}>
             <label for="clase-cols-select">Seleccione la columna Clase:  </label>
             <select id="clase-cols-select">
             <option name="data-clase-cols" value="none" selected disabled>-- Seleccione</option>`;
@@ -459,6 +459,11 @@ const showForm = (elem) => {
     
     html += `</select></div>`;
     document.querySelector('#body-alg-form').innerHTML = html;
+
+    if(algKey == 'kmeans'){
+        document.querySelector('#form-btn-preview').removeAttribute('disabled')
+        document.querySelector('#form-btn-process').removeAttribute('disabled')
+    } 
     
     switch(algKey){
         case 'knn': {
@@ -468,7 +473,7 @@ const showForm = (elem) => {
         }
         
         case 'kmeans': {
-            document.querySelector('#body-alg-form').setAttribute('modo', 'single');
+            document.querySelector('#body-alg-form').setAttribute('modo', 'multi');
             renderKMeansForm();
             break;
         }

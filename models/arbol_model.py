@@ -26,39 +26,36 @@ class RegTreeModel(MLAlgorithms):
     def resolve(self):
         dataCSV = self.previewData()
 
+        X = dataCSV.drop(columns = self.colClase)
+        y = dataCSV[self.colClase]
+
         # División de los datos en train y test
         X_train, X_test, y_train, y_test = train_test_split(
-            dataCSV.drop(columns = self.colClase),
-            dataCSV[self.colClase],
-            test_size=0.3,
-            random_state = 123
+            X, y, test_size=0.3, random_state = 42
         )
 
-        start_fit = time.time()
+        start_time = time.time()
         # Creación del modelo
         modelo = DecisionTreeRegressor(
-            max_depth         = 50,
-            random_state      = 123
+            max_depth         = 5,
+            random_state      = 42
         )
 
         # Binarizar etiquetas
-        lb = LabelBinarizer()
-        y_train_bin = lb.fit_transform(y_train)
-        y_test_bin = lb.transform(y_test)
+        #lb = LabelBinarizer()
+        #y_train_bin = lb.fit_transform(y_train)
+        #y_test_bin = lb.transform(y_test)
 
         # Entrenamiento del modelo
-        modelo.fit(X_train, y_train_bin)
-        fit_time = time.time() - start_fit
+        modelo.fit(X_train, y_train)
         
-        # Prediccion del modelo
-        start_pred = time.time()
         y_pred = modelo.predict(X_test)
-        predict_time = time.time() - start_pred
+        elapsed_time = time.time() - start_time
 
         # 4. Métricas de eficiencia
-        r2 = r2_score(y_test_bin, y_pred)
-        mse = mean_squared_error(y_test_bin, y_pred)
-        mae = mean_absolute_error(y_test_bin, y_pred)
+        r2 = r2_score(y_test, y_pred)
+        mse = mean_squared_error(y_test, y_pred)
+        mae = mean_absolute_error(y_test, y_pred)
 
         # Estructura del árbol creado
         fig, ax = plt.subplots(figsize=(12, 5))
@@ -68,9 +65,10 @@ class RegTreeModel(MLAlgorithms):
 
         plot_tree(
             decision_tree = modelo,
-            feature_names = dataCSV.drop(columns = self.colClase).columns,
-            class_names   = dataCSV[self.colClase],
+            feature_names = X.columns,
+            #class_names   = dataCSV[self.colClase],
             filled        = True,
+            rounded       = True,
             impurity      = False,
             fontsize      = 10,
             precision     = 2,
@@ -80,5 +78,5 @@ class RegTreeModel(MLAlgorithms):
         
         return {
             "graph": plt, 
-            "details": f"<p><b>Tiempo de procesamiento:</b></p><ul><li>Entrenamiento: ~{fit_time:.4f} segundos</li><li>Prediccion: ~{predict_time:.4f} segundos</li></ul><p><b>Eficiencia:</b></p><ul><li>R²: ~{r2:.4f}</li><li>MSE: ~{mse:.4f}</li><li>MAE: ~{mae:.4f}</li></ul>"
+            "details": f"<p><b>Tiempo de procesamiento:</b></p><ul><li>Prediccion: ~{elapsed_time:.4f} segundos</li></ul><p><b>Eficiencia:</b></p><ul><li>R²: ~{r2:.4f}</li><li>MSE: ~{mse:.4f}</li><li>MAE: ~{mae:.4f}</li></ul>"
         }

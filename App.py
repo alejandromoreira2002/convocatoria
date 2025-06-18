@@ -48,11 +48,12 @@ def prueba():
 def previewData():
     metodo = request.args.get('metodo')
     filename = request.args.get('filename')
-    colClase = request.args.get('colClase')
     columnas = request.args.get('columnas').split(',')
+    colClase = None
 
-    #json_data = request.form.get('data')
-    #json_data = request.get_json()
+    if 'colClase' in request.args:
+        colClase = request.args.get('colClase')
+
     ruta_archivo = os.path.join(app.config['TEMP_FOLDER'], filename)
     dataCSV = pd.read_csv(ruta_archivo)
     #print(json_data)
@@ -78,8 +79,11 @@ def previewData():
 def processData():
     metodo = request.args.get('metodo')
     filename = request.args.get('filename')
-    colClase = request.args.get('colClase')
     columnas = request.args.get('columnas').split(',')
+    colClase = None
+
+    if 'colClase' in request.args:
+        colClase = request.args.get('colClase')
 
     #json_data = request.get_json()
     #print(json_data)
